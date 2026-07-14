@@ -4,32 +4,7 @@ exports.handler = async function () {
 
   try {
     const response = await fetch(
-  `https://api.netlify.com/api/v1/sites/${siteId}/forms`,
-    {
-        headers: {
-        Authorization: `Bearer ${token}`
-        }
-    }
-    );
-
-    const forms = await response.json();
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify(forms)
-        };
-
-    if (!rsvpForm) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({
-          error: "RSVP form not found"
-        })
-      };
-    }
-
-    const submissions = await fetch(
-      `https://api.netlify.com/api/v1/forms/${rsvpForm.id}/submissions`,
+      `https://api.netlify.com/api/v1/sites/${siteId}/submissions`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -37,7 +12,7 @@ exports.handler = async function () {
       }
     );
 
-    const data = await submissions.json();
+    const data = await response.json();
 
     return {
       statusCode: 200,
