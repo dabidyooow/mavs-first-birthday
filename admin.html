@@ -1,0 +1,146 @@
+<html>
+    <head>
+        <style>
+            body {
+                background: #001f3f;
+                color: white;
+                font-family: Arial;
+                padding: 40px;
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .stats {
+                display: flex;
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+
+            .card {
+                flex: 1;
+                background: #00538c;
+                padding: 30px;
+                border-radius: 15px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,.3);
+            }
+
+            .card h2 {
+                font-size: 50px;
+                color: #4a9fd8;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                color: black;
+                border-radius: 15px;
+                overflow: hidden;
+            }
+
+            th {
+                background: #00538c;
+                color: white;
+            }
+
+            th,
+            td {
+                padding: 15px;
+                border-bottom: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="stats">
+            <div class="card">
+                <h2 id="attending">0</h2>
+                <p>Attending</p>
+            </div>
+
+            <div class="card">
+                <h2 id="declined">0</h2>
+                <p>Declined</p>
+            </div>
+
+            <div class="card">
+                <h2 id="heads">0</h2>
+                <p>Total Heads</p>
+            </div>
+            </div>
+
+            <table id="table">
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Plus</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
+    </body>
+
+    <script>
+        async function loadRSVP() {
+        const res = await fetch(
+            "/.netlify/functions/get-rsvp"
+        );
+
+        const data = await res.json();
+
+        let attending = 0;
+        let declined = 0;
+        let heads = 0;
+
+        const tbody =
+            document.querySelector("#table tbody");
+
+        tbody.innerHTML = "";
+
+        data.forEach(item => {
+
+            const name =
+            item.data.guest_name || "";
+
+            const status =
+            item.data.attendance || "";
+
+            const plus =
+            parseInt(item.data.plus_count || 0);
+
+            if (status === "Yes") {
+            attending++;
+            heads += plus + 1;
+            } else {
+            declined++;
+            }
+
+            tbody.innerHTML += `
+            <tr>
+                <td>${name}</td>
+                <td>${status}</td>
+                <td>${plus}</td>
+            </tr>
+            `;
+        });
+
+        document.getElementById(
+            "attending"
+        ).innerText = attending;
+
+        document.getElementById(
+            "declined"
+        ).innerText = declined;
+
+        document.getElementById(
+            "heads"
+        ).innerText = heads;
+        }
+
+        loadRSVP();
+        </script>
+</html>

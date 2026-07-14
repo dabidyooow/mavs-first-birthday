@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mav's First Birthday — Dallas Mavericks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <style>
+    :root {
+      --mavs-navy: #00285e;
+      --mavs-royal: #00538c;
+      --mavs-sky: #4a9fd8;
+      --mavs-silver: #b8c4ca;
+      --mavs-white: #f5f7fa;
+      --mavs-light: #e8eef4;
+      --ink: #0a1628;
+      --pop-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --pop-blast: cubic-bezier(0.34, 1.8, 0.64, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      background: var(--ink);
+      color: var(--mavs-white);
+      overflow-x: hidden;
+    }
+
+    /* —— Global animated background —— */
+    .bg-layers {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-layers::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 80% at 10% 20%, rgba(74, 159, 216, 0.35) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 70% at 90% 60%, rgba(0, 83, 140, 0.5) 0%, transparent 45%),
+        radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0, 40, 94, 0.8) 0%, transparent 55%),
+        linear-gradient(165deg, #001a3d 0%, var(--mavs-navy) 35%, var(--ink) 100%);
+    }
+
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .bg-court-lines {
+      position: absolute;
+      inset: 0;
+      opacity: 0.08;
+      background-image:
+        linear-gradient(90deg, var(--mavs-silver) 2px, transparent 2px),
+        linear-gradient(var(--mavs-silver) 2px, transparent 2px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+    }
+
+    .bg-arc {
+      position: absolute;
+      bottom: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140%;
+      height: 70%;
+      border: 3px solid rgba(184, 196, 202, 0.12);
+      border-radius: 50%;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: orb-drift 18s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 320px; height: 320px;
+      background: rgba(74, 159, 216, 0.45);
+      top: 8%; left: -8%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 280px; height: 280px;
+      background: rgba(0, 83, 140, 0.55);
+      top: 45%; right: -10%;
+      animation-delay: -6s;
+    }
+
+    .orb-3 {
+      width: 200px; height: 200px;
+      background: rgba(184, 196, 202, 0.2);
+      bottom: 15%; left: 30%;
+      animation-delay: -12s;
+    }
+
+    @keyframes orb-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -25px) scale(1.08); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    .bg-stripe {
+      position: absolute;
+      width: 200%;
+      height: 120px;
+      background: repeating-linear-gradient(
+        -12deg,
+        transparent,
+        transparent 40px,
+        rgba(74, 159, 216, 0.04) 40px,
+        rgba(74, 159, 216, 0.04) 80px
+      );
+      animation: stripe-slide 25s linear infinite;
+    }
+
+    .bg-stripe-1 { top: 20%; left: -50%; }
+    .bg-stripe-2 { top: 55%; left: -50%; animation-duration: 35s; opacity: 0.7; }
+
+    @keyframes stripe-slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(25%); }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    section { position: relative; width: 100%; }
+
+    .container {
+      width: min(1000px, 92vw);
+      margin: 0 auto;
+    }
+
+    /* —— Pop animations (amped up) —— */
+    .pop {
+      opacity: 0;
+      transform: scale(0.35) translateY(70px) rotate(-4deg);
+      transition:
+        opacity 0.5s ease-out,
+        transform 0.9s var(--pop-blast);
+      will-change: transform, opacity;
+    }
+
+    .pop.pop-left {
+      transform: scale(0.35) translateX(-90px) rotate(-8deg);
+    }
+
+    .pop.pop-right {
+      transform: scale(0.35) translateX(90px) rotate(8deg);
+    }
+
+    .pop.pop-up {
+      transform: scale(0.25) translateY(100px);
+    }
+
+    .pop.pop-flip {
+      transform: perspective(800px) scale(0.5) rotateX(25deg) translateY(50px);
+    }
+
+    .pop.pop-spin {
+      transform: scale(0.2) rotate(-25deg);
+    }
+
+    .pop.is-visible {
+      opacity: 1;
+      transform: scale(1) translate(0) rotate(0) rotateX(0);
+    }
+
+    .pop.is-visible.pop-bounce {
+      animation: pop-bounce 0.85s var(--pop-blast) both;
+    }
+
+    @keyframes pop-bounce {
+      0% { opacity: 0; transform: scale(0.3) translateY(60px); }
+      55% { opacity: 1; transform: scale(1.12) translateY(-8px); }
+      75% { transform: scale(0.96) translateY(4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .pop-delay-1 { transition-delay: 0.08s; }
+    .pop-delay-2 { transition-delay: 0.18s; }
+    .pop-delay-3 { transition-delay: 0.28s; }
+    .pop-delay-4 { transition-delay: 0.4s; }
+    .pop-delay-5 { transition-delay: 0.52s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .pop, .pop.is-visible.pop-bounce {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        animation: none;
+      }
+      .orb, .bg-stripe, .confetti-piece { animation: none !important; }
+      .confetti-wrap { display: none; }
+    }
+
+    /* —— Hero —— */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1rem 4rem;
+      overflow: hidden;
+      gap: 1.25rem;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(74, 159, 216, 0.22) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30 Z' fill='none' stroke='rgba(184,196,202,0.06)' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: auto, 60px 60px;
+      pointer-events: none;
+    }
+
+    .hero-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+      width: min(920px, 94vw);
+    }
+
+    @media (min-width: 640px) {
+      .hero-header {
+        flex-direction: row;
+        text-align: left;
+        gap: 1rem;
+        justify-content: center;
+      }
+      .hero-title-block { flex: 1; max-width: 28rem; }
+    }
+
+    .hero-logo {
+      width: clamp(48px, 10vw, 64px);
+      height: auto;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .hero-badge {
+      font-family: "Oswald", sans-serif;
+      font-size: clamp(0.65rem, 2vw, 0.78rem);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mavs-silver);
+      line-height: 1.35;
+    }
+
+    .hero h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2rem, 7vw, 3.25rem);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      color: var(--mavs-white);
+      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+      margin-top: 0.15rem;
+    }
+
+    .hero h1 .nick {
+      color: var(--mavs-sky);
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+      font-size: 1em;
+    }
+
+    .hero h1 .age {
+      display: inline;
+      font-size: 0.72em;
+      color: var(--mavs-silver);
+      margin-top: 0;
+    }
+
+    .hero h1 .sep {
+      color: var(--mavs-silver);
+      font-size: 0.65em;
+      margin: 0 0.15em;
+      opacity: 0.7;
+    }
+
+    .hero-tagline {
+      font-family: "Oswald", sans-serif;
+      font-size: clamp(0.72rem, 2.2vw, 0.88rem);
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mavs-silver);
+      margin-top: 0.35rem;
+      opacity: 0.9;
+    }
+
+    /* Photo-first hero gallery */
+    .hero-gallery {
+      position: relative;
+      z-index: 1;
+      width: min(920px, 94vw);
+      margin-top: 0.25rem;
+    }
+
+    .hero-photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr 1.35fr 1fr;
+      grid-template-rows: repeat(2, minmax(120px, 1fr));
+      gap: 0.65rem;
+      height: clamp(280px, 48vh, 440px);
+    }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 4px solid var(--mavs-white);
+      border-radius: 10px;
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.38),
+        0 0 16px rgba(74, 159, 216, 0.15);
+      transition: transform 0.35s ease;
+    }
+
+    .hero-photo:hover {
+      transform: scale(1.02);
+    }
+
+    .hero-photo-main {
+      grid-column: 2 / 4;
+      grid-row: 1 / 3;
+      border-radius: 14px;
+      border-width: 5px;
+    }
+
+    .hero-photo-slot-1 { grid-column: 1; grid-row: 1; }
+    .hero-photo-slot-2 { grid-column: 1; grid-row: 2; }
+    .hero-photo-slot-3 { grid-column: 4; grid-row: 1; }
+    .hero-photo-slot-4 { grid-column: 4; grid-row: 2; }
+
+    @media (max-width: 640px) {
+      .hero-photo-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 200px 110px 110px;
+        height: auto;
+      }
+      .hero-photo-main {
+        grid-column: 1 / 3;
+        grid-row: 1;
+      }
+      .hero-photo-slot-1 { grid-column: 1; grid-row: 2; }
+      .hero-photo-slot-2 { grid-column: 2; grid-row: 2; }
+      .hero-photo-slot-3 { grid-column: 1; grid-row: 3; }
+      .hero-photo-slot-4 { grid-column: 2; grid-row: 3; }
+    }
+
+    .hero-mini-badge {
+      position: absolute;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.5rem;
+      background: rgba(0, 40, 94, 0.88);
+      border: 1.5px solid var(--mavs-sky);
+      border-radius: 3px;
+      color: var(--mavs-sky);
+      z-index: 2;
+    }
+
+    .hero-mini-badge-1 { top: -6px; left: 8%; }
+    .hero-mini-badge-2 { bottom: -6px; right: 8%; }
+
+    .scroll-hint {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      transform: none;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      margin-top: 0.25rem;
+      z-index: 1;
+      animation: bounce 2s ease infinite;
+      color: var(--mavs-silver);
+      opacity: 0.75;
+      text-transform: uppercase;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* —— Story —— */
+    .story {
+      padding: 7rem 0;
+    }
+
+    .story::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(0, 83, 140, 0.15) 50%, transparent);
+      pointer-events: none;
+    }
+
+    .story-collage {
+      position: relative;
+      min-height: 420px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 720px) {
+      .story-collage { margin: 0; }
+    }
+
+    .story-main {
+      width: 72%;
+      aspect-ratio: 3 / 4;
+      border-radius: 20px 4px 20px 4px;
+      overflow: hidden;
+      border: 4px solid var(--mavs-sky);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      transform: rotate(-2deg);
+    }
+
+    .story-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .story-main .jersey-num {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 5rem;
+      color: var(--mavs-white);
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+      line-height: 1;
+    }
+
+    .story-circle {
+      position: absolute;
+      top: 8%;
+      right: 0;
+      width: 38%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid var(--mavs-silver);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      transform: rotate(6deg);
+    }
+
+    .story-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+    .story-pill {
+      position: absolute;
+      bottom: 5%;
+      right: 15%;
+      width: 45%;
+      height: 28%;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 3px solid var(--mavs-royal);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+      transform: rotate(-4deg);
+    }
+
+    .story-pill img { width: 100%; height: 100%; object-fit: cover; }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (min-width: 720px) {
+      .story-grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    }
+
+    .section-label {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.35em;
+      color: var(--mavs-sky);
+      margin-bottom: 0.5rem;
+    }
+
+    .story h2, .gallery h2, .details h2, .lineup h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      line-height: 1;
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+
+    .story p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--mavs-light);
+      max-width: 42ch;
+    }
+
+    .story p + p { margin-top: 1rem; }
+
+    /* —— Hero confetti —— */
+    .confetti-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -12px;
+      opacity: 0;
+      animation: confetti-fall linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% { opacity: 1; transform: translateY(0) rotate(0deg) translateX(0); }
+      100% { opacity: 0.6; transform: translateY(110vh) rotate(720deg) translateX(var(--drift)); }
+    }
+
+    .hero-logo {
+      width: clamp(48px, 10vw, 64px);
+      height: auto;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    /* —— Jersey showcase —— */
+    .jersey-section {
+      padding: 5rem 0 6rem;
+    }
+
+    .jersey-layout {
+      display: grid;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .jersey-layout { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    }
+
+    .jersey-uniform-wrap {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .jersey-uniform {
+      position: relative;
+      width: min(720px, 96vw);
+      margin: 0 auto;
+      filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.5));
+    }
+
+    .jersey-uniform img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Navy patches hide template text (Mavs / PLAYER / 41) */
+    .jersey-patch {
+      position: absolute;
+      background: #0b2248;
+      border-radius: 2px;
+      z-index: 1;
+    }
+
+    .patch-mavs { left: 11.5%; top: 19.5%; width: 24%; height: 9.5%; }
+    .patch-front-num { left: 26.5%; top: 33.5%; width: 9%; height: 10%; }
+    .patch-player { left: 53%; top: 18.5%; width: 36%; height: 9%; }
+    .patch-back-num { left: 57%; top: 27%; width: 22%; height: 24%; }
+
+    .jersey-text {
+      position: absolute;
+      z-index: 2;
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .text-front-brand {
+      left: 12%;
+      top: 19.2%;
+      width: 24%;
+      font-family: "Bebas Neue", cursive;
+      font-size: clamp(1.4rem, 5.2vw, 2.75rem);
+      color: #fff;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      text-shadow: 0 0 1px #7ec8f0, 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .text-front-num {
+      left: 26%;
+      top: 33%;
+      width: 10%;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      color: #c8d0d8;
+      text-shadow:
+        1px 1px 0 #fff,
+        -1px -1px 0 #fff,
+        0 2px 6px rgba(0, 0, 0, 0.6);
+      line-height: 1;
+    }
+
+    .text-back-name {
+      left: 52.5%;
+      top: 17.8%;
+      width: 38%;
+      font-family: "Oswald", sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.55rem, 2.1vw, 1.05rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1.15;
+      transform: rotate(-2deg);
+    }
+
+    .text-back-num {
+      left: 56%;
+      top: 28%;
+      width: 24%;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3.5rem, 14vw, 6.5rem);
+      color: #c8d0d8;
+      text-shadow:
+        2px 2px 0 #fff,
+        -1px -1px 0 #fff,
+        0 4px 12px rgba(0, 0, 0, 0.5);
+      line-height: 0.9;
+    }
+
+    @media (max-width: 480px) {
+      .text-back-name {
+        font-size: clamp(0.5rem, 2.8vw, 0.75rem);
+        letter-spacing: 0.08em;
+      }
+    }
+
+    .jersey-copy h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.2rem, 7vw, 3.2rem);
+      margin-bottom: 1rem;
+    }
+
+    .jersey-copy p {
+      color: var(--mavs-light);
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+
+    /* —— Gallery + court floor + sticker grid —— */
+    .gallery {
+      padding: 6rem 0 7rem;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .gallery-court {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-color: #1a4a2e;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23153828' width='120' height='120'/%3E%3Cpath d='M0 60 H120 M60 0 V120' stroke='%232a5c40' stroke-width='1' opacity='0.5'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(0, 40, 94, 0.92) 0%, rgba(0, 40, 94, 0.75) 40%, rgba(0, 40, 94, 0.9) 100%);
+      background-size: 120px 120px, 100% 100%;
+      background-blend-mode: overlay, normal;
+    }
+
+    .gallery-court::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(74, 159, 216, 0.15) 0%, transparent 55%),
+        linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.08) 49%, rgba(255, 255, 255, 0.08) 51%, transparent 52%),
+        linear-gradient(0deg, transparent 48%, rgba(255, 255, 255, 0.06) 49%, rgba(255, 255, 255, 0.06) 51%, transparent 52%);
+      pointer-events: none;
+    }
+
+    .gallery .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gallery h2 { text-align: center; margin-bottom: 0.5rem; }
+    .gallery-sub {
+      text-align: center;
+      color: var(--mavs-silver);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 720px) {
+      .highlights-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    }
+
+    .highlight-frame {
+      position: relative;
+      padding: 6px;
+    }
+
+    .highlight-photo {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--ink);
+      border: 4px solid var(--mavs-white);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s var(--pop-spring), box-shadow 0.4s ease;
+    }
+
+    .highlight-frame.is-visible .highlight-photo:hover {
+      transform: scale(1.02);
+      box-shadow: 0 14px 36px rgba(74, 159, 216, 0.35);
+    }
+
+    .highlight-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Stickers on frames */
+    .sticker {
+      position: absolute;
+      z-index: 3;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+      transition: transform 0.5s var(--pop-blast);
+    }
+
+    .highlight-frame.is-visible .sticker {
+      animation: sticker-pop 0.6s var(--pop-blast) both;
+      animation-delay: var(--sticker-delay, 0.3s);
+    }
+
+    @keyframes sticker-pop {
+      0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+      70% { transform: scale(1.15) rotate(6deg); }
+      100% { transform: scale(1) rotate(var(--sticker-rotate, -8deg)); opacity: 1; }
+    }
+
+    .sticker-badge {
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      border: 2px solid var(--ink);
+    }
+
+    .sticker-gold {
+      background: var(--mavs-sky);
+      color: var(--mavs-navy);
+    }
+
+    .sticker-navy {
+      background: var(--mavs-navy);
+      color: var(--mavs-white);
+      border-color: var(--mavs-sky);
+    }
+
+    .sticker-star {
+      width: 52px;
+      height: 52px;
+      background: var(--mavs-sky);
+      color: var(--mavs-navy);
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .sticker-logo {
+      width: 56px;
+      height: 56px;
+      background: var(--mavs-white);
+      border: 3px solid var(--mavs-navy);
+      border-radius: 50%;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sticker-logo img {
+      width: 100%;
+      height: auto;
+    }
+
+    .sticker-emoji {
+      font-size: 2rem;
+      background: var(--mavs-white);
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .st-pos-tl { top: -4px; left: -8px; --sticker-rotate: -12deg; }
+    .st-pos-tr { top: -6px; right: -10px; --sticker-rotate: 10deg; }
+    .st-pos-bl { bottom: 4px; left: -12px; --sticker-rotate: 8deg; }
+    .st-pos-br { bottom: 0; right: -14px; --sticker-rotate: -6deg; }
+
+    .photo-hint {
+      font-size: 0.8rem;
+      color: var(--mavs-silver);
+      text-align: center;
+      margin-top: 2rem;
+      opacity: 0.7;
+    }
+
+    /* —— Details —— */
+    .details {
+      padding: 6rem 0;
+      background:
+        linear-gradient(135deg, #f0f4f8 0%, var(--mavs-white) 40%, #dce8f2 100%);
+      color: var(--ink);
+      position: relative;
+    }
+
+    .details::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--mavs-navy), var(--mavs-sky), var(--mavs-navy));
+    }
+
+    .details-inner {
+      display: grid;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (min-width: 720px) {
+      .details-inner { grid-template-columns: 1fr 1fr; gap: 3.5rem; }
+    }
+
+    .details h2 { color: var(--mavs-navy); }
+    .details .section-label { color: var(--mavs-royal); }
+
+    .details-intro {
+      font-size: 1.1rem;
+      line-height: 1.65;
+      color: #3a4a5c;
+      margin-bottom: 1.5rem;
+    }
+
+    .ticket-card {
+      background: linear-gradient(145deg, var(--mavs-navy) 0%, #001f45 100%);
+      color: var(--mavs-white);
+      border-radius: 12px;
+      padding: 2rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 40, 94, 0.35);
+    }
+
+    .ticket-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mavs-sky), var(--mavs-silver), var(--mavs-sky));
+    }
+
+    .ticket-card h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.12em;
+      color: var(--mavs-sky);
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    .ticket-row {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px dashed rgba(184, 196, 202, 0.35);
+    }
+
+    .ticket-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .ticket-label {
+      font-family: "Oswald", sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mavs-silver);
+    }
+
+    .ticket-value {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-top: 0.15rem;
+    }
+
+    .ticket-value small {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-top: 0.2rem;
+    }
+
+    .details-photos {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .details-hero-img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: 16px 4px 16px 4px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0, 40, 94, 0.25);
+      transform: rotate(1.5deg);
+    }
+
+    .details-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .details-row-imgs {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+
+    .details-small {
+      flex: 1;
+      aspect-ratio: 4 / 5;
+      border-radius: 50% 50% 12px 12px;
+      overflow: hidden;
+      border: 3px solid var(--mavs-sky);
+      transform: rotate(-5deg);
+      box-shadow: 0 12px 28px rgba(0, 40, 94, 0.2);
+    }
+
+    .details-small.alt {
+      flex: 1.2;
+      aspect-ratio: 3 / 2;
+      border-radius: 12px;
+      transform: rotate(4deg);
+      border-color: var(--mavs-navy);
+    }
+
+    .details-small img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* —— Godparents court (Starting Lineup) —— */
+    .lineup {
+      padding: 5rem 0 6rem;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .lineup-court-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-color: #c9a66b;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23b89255' width='80' height='80'/%3E%3Cpath d='M0 40 H80 M40 0 V80' stroke='%23a67f45' stroke-width='0.5' opacity='0.35'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(0, 40, 94, 0.88) 0%, rgba(0, 40, 94, 0.72) 35%, rgba(0, 40, 94, 0.88) 100%);
+      background-size: 80px 80px, 100% 100%;
+      background-blend-mode: multiply, normal;
+    }
+
+    .lineup-court-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 45% at 50% 52%, rgba(201, 166, 107, 0.35) 0%, transparent 70%),
+        linear-gradient(90deg, rgba(0, 83, 140, 0.35) 0%, transparent 18%, transparent 82%, rgba(0, 83, 140, 0.35) 100%);
+      pointer-events: none;
+    }
+
+    .lineup-court-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .lineup-court-lines svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .lineup .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lineup h2 {
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .lineup-intro {
+      text-align: center;
+      color: var(--mavs-silver);
+      font-size: 1.05rem;
+      max-width: 42ch;
+      margin: 0 auto 2.5rem;
+      line-height: 1.55;
+    }
+
+    .godparents-grid {
+      display: grid;
+      grid-template-columns: 1fr minmax(120px, 160px) 1fr;
+      gap: clamp(1rem, 3vw, 2rem);
+      align-items: start;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 820px) {
+      .godparents-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "center center"
+          "ninangs ninongs";
+      }
+      .court-center { grid-area: center; margin-bottom: 0.5rem; }
+      .godparents-col.ninangs { grid-area: ninangs; }
+      .godparents-col.ninongs { grid-area: ninongs; }
+    }
+
+    .godparents-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .col-heading {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      letter-spacing: 0.14em;
+      text-align: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.35rem;
+    }
+
+    .godparents-col.ninangs .col-heading {
+      background: linear-gradient(90deg, rgba(74, 159, 216, 0.35), rgba(0, 83, 140, 0.5));
+      border: 2px solid var(--mavs-sky);
+      color: var(--mavs-white);
+    }
+
+    .godparents-col.ninongs .col-heading {
+      background: linear-gradient(90deg, rgba(0, 83, 140, 0.5), rgba(74, 159, 216, 0.35));
+      border: 2px solid var(--mavs-silver);
+      color: var(--mavs-white);
+    }
+
+    .court-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-top: 1rem;
+    }
+
+    .court-center-logo {
+      width: clamp(64px, 12vw, 88px);
+      height: auto;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+    }
+
+    .court-center-badge {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      color: var(--mavs-navy);
+      background: var(--mavs-white);
+      border: 2px solid var(--mavs-navy);
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+    }
+
+    .court-center-vs {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      color: var(--mavs-sky);
+      letter-spacing: 0.08em;
+    }
+
+    .godparent-card {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.75rem;
+      background: linear-gradient(135deg, rgba(0, 40, 94, 0.92) 0%, rgba(0, 26, 58, 0.96) 100%);
+      border: 2px solid rgba(184, 196, 202, 0.45);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      text-align: left;
+    }
+
+    .godparents-col.ninongs .godparent-card {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+
+    .godparent-photo {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--mavs-sky);
+      background: rgba(0, 83, 140, 0.45);
+      position: relative;
+    }
+
+    .godparents-col.ninongs .godparent-photo {
+      border-color: var(--mavs-silver);
+    }
+
+    .godparent-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .godparent-photo img.is-placeholder {
+      opacity: 0;
+    }
+
+    .godparent-photo::after {
+      content: "+";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--mavs-silver);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .godparent-photo.has-photo::after {
+      display: none;
+    }
+
+    .godparents-col.ninangs .godparent-card {
+      border-left: 4px solid var(--mavs-sky);
+    }
+
+    .godparents-col.ninongs .godparent-card {
+      border-right: 4px solid var(--mavs-silver);
+    }
+
+    .godparent-card.is-visible {
+      animation: card-pop 0.7s var(--pop-blast) both;
+    }
+
+    .godparent-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.15rem;
+      color: var(--mavs-navy);
+      background: var(--mavs-sky);
+      border: 2px solid var(--mavs-white);
+    }
+
+    .godparents-col.ninongs .godparent-num {
+      background: var(--mavs-silver);
+    }
+
+    .godparent-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .godparent-role {
+      font-family: "Oswald", sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mavs-sky);
+      line-height: 1.2;
+    }
+
+    .godparents-col.ninongs .godparent-role {
+      color: var(--mavs-silver);
+    }
+
+    .godparent-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--mavs-white);
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .lineup-note {
+      margin-top: 2.5rem;
+      font-size: 1.05rem;
+      color: var(--mavs-light);
+      max-width: 40ch;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .godparents-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--mavs-silver);
+      margin-top: 1.25rem;
+      opacity: 0.8;
+    }
+
+
+    @keyframes card-pop {
+      0% { transform: scale(0.5) translateY(30px); opacity: 0; }
+      70% { transform: scale(1.08) translateY(-4px); }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    /* —— RSVP —— */
+    .rsvp-section {
+      padding: 5rem 0 5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .rsvp-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(74, 159, 216, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .rsvp-ball-wrap {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .rsvp-ball-wrap img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 24px rgba(74, 159, 216, 0.7));
+    }
+
+    .rsvp-ball-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border: 2px dashed rgba(74, 159, 216, 0.4);
+      border-radius: 50%;
+      animation: spin-slow 12s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+
+    .rsvp-btn {
+      display: inline-block;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      color: var(--mavs-navy);
+      background: linear-gradient(180deg, var(--mavs-sky) 0%, #3a8fc4 100%);
+      padding: 0.9rem 2.5rem;
+      border-radius: 6px;
+      box-shadow: 0 6px 0 #2a6a94, 0 12px 28px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .rsvp-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 9px 0 #2a6a94, 0 16px 32px rgba(74, 159, 216, 0.4);
+    }
+
+    .rsvp-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 0 #2a6a94;
+    }
+
+    .rsvp-note { margin-top: 1rem; font-size: 0.9rem; color: var(--mavs-silver); }
+
+    footer {
+      padding: 2rem 1rem 3rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(184, 196, 202, 0.5);
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rsvp-form {
+        max-width: 500px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .rsvp-form input,
+    .rsvp-form select {
+        padding: 15px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1rem;
+    }
+
+    .rsvp-form button {
+        background: var(--mavs-sky);
+        color: var(--mavs-navy);
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Bebas Neue";
+        font-size: 1.3rem;
+        cursor: pointer;
+    }
+
+    .rsvp-form button:hover {
+        background: #69b4ea;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="bg-layers" aria-hidden="true">
+    <div class="bg-noise"></div>
+    <div class="bg-court-lines"></div>
+    <div class="bg-arc"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="bg-stripe bg-stripe-1"></div>
+    <div class="bg-stripe bg-stripe-2"></div>
+  </div>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="confetti-wrap" id="confetti" aria-hidden="true"></div>
+
+      <div class="hero-header pop pop-up">
+        <img
+          class="hero-logo"
+          src="https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg"
+          alt="Dallas Mavericks logo"
+          width="64"
+          height="64"
+        />
+        <div class="hero-title-block">
+          <p class="hero-badge">Dalix Maven Palabay Dacanay · First Birthday</p>
+          <h1>
+            <span class="nick">MAV</span><span class="sep">·</span><span class="age">turns ONE</span>
+          </h1>
+          <p class="hero-tagline">You're invited to the rookie's big game</p>
+        </div>
+      </div>
+
+      <div class="hero-gallery pop pop-bounce pop-delay-1">
+        <span class="hero-mini-badge hero-mini-badge-1">#1 PICK</span>
+        <span class="hero-mini-badge hero-mini-badge-2">MAVS FAN</span>
+        <div class="hero-photo-grid">
+          <img src="assets/3.jpeg" alt="Mav" class="hero-photo hero-photo-slot-1 pop pop-left pop-delay-2" />
+          <img src="assets/2.jpeg" alt="Mav" class="hero-photo hero-photo-slot-2 pop pop-left pop-delay-3" />
+          <img src="assets/1.jpeg" alt="Mav" class="hero-photo hero-photo-main pop pop-bounce pop-delay-1" />
+          <img src="assets/6.jpeg" alt="Mav" class="hero-photo hero-photo-slot-3 pop pop-right pop-delay-2" />
+          <img src="assets/5.jpeg" alt="Mav" class="hero-photo hero-photo-slot-4 pop pop-right pop-delay-3" />
+        </div>
+      </div>
+
+      <p class="scroll-hint">Scroll down</p>
+    </section>
+
+    <section class="story" id="story">
+      <div class="container story-grid">
+        <div class="story-collage">
+          <figure class="story-main pop pop-left pop-bounce">
+            <img
+              src="assets/4.jpeg"
+              alt="Mav — replace with your photo"
+            />
+            <span class="jersey-num">1</span>
+          </figure>
+          <figure class="story-circle pop pop-spin pop-delay-2">
+            <img
+              src="assets/ball.avif"
+              alt=""
+            />
+          </figure>
+          <figure class="story-pill pop pop-right pop-delay-3">
+            <img
+              src="assets/popup1.png"
+            />
+          </figure>
+        </div>
+        <div>
+          <p class="section-label pop pop-right">The Rookie</p>
+          <h2 class="pop pop-right pop-bounce pop-delay-1">Meet <span style="color: var(--mavs-sky)">Dalix Maven</span></h2>
+          <p class="pop pop-right pop-delay-2">
+            Our little MVP is <strong>Dalix Maven</strong> — we call him <strong>Mav</strong>, named for the
+            Dallas Mavericks and all the heart of Dallas basketball. He's fast on his feet, loves the crowd,
+            and is ready for his first birthday tip-off.
+          </p>
+          <p class="pop pop-right pop-delay-3">
+            Join our fan section as we celebrate one incredible year of our favorite rookie.
+            Mavs blue, game-day energy, and plenty of cake.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="jersey-section" id="jersey">
+      <div class="container jersey-layout">
+        <div class="jersey-uniform-wrap">
+          <figure class="jersey-uniform pop pop-bounce">
+            <img
+              src="assets/mavs-jersey.png"
+              alt="Dallas Mavericks uniform — Dalix Maven number 1"
+              width="720"
+              height="400"
+            />
+          </figure>
+        </div>
+        <div class="jersey-copy">
+          <p class="section-label pop pop-right">Official fan gear</p>
+          <h2 class="pop pop-right pop-bounce pop-delay-1">Dalix Maven, #1</h2>
+          <p class="pop pop-right pop-delay-2">
+            Meet <strong>Dalix Maven</strong> — we call him <strong>Mav</strong> for short, just like
+            his Dallas Mavericks. His custom jersey rocks <strong>Mav @</strong> on the front and his
+            full name on the back with lucky number <strong>1</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+      <div class="gallery-court" aria-hidden="true"></div>
+      <div class="container">
+        <center><p class="section-label pop pop-up">Season highlights</p></center>
+        <h2 class="pop pop-bounce pop-delay-1">Mav's Year One</h2>
+        <p class="gallery-sub pop pop-delay-2">Best moments from his rookie season</p>
+
+        <div class="highlights-grid">
+          <figure class="highlight-frame pop pop-bounce">
+            <span class="sticker sticker-badge sticker-gold st-pos-tr" style="--sticker-delay: 0.35s">#1!</span>
+            <div class="highlight-photo">
+              <img src="assets/7.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-1">
+            <span class="sticker sticker-emoji st-pos-tl" style="--sticker-delay: 0.4s">🏀</span>
+            <div class="highlight-photo">
+              <img src="assets/9.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-2">
+            <span class="sticker sticker-logo st-pos-br" style="--sticker-delay: 0.45s">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg" alt="" width="40" height="40" />
+            </span>
+            <div class="highlight-photo">
+              <img src="assets/8.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce">
+            <span class="sticker sticker-badge sticker-navy st-pos-bl" style="--sticker-delay: 0.35s">GO MAV!</span>
+            <div class="highlight-photo">
+              <img src="assets/10.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-1">
+            <span class="sticker sticker-star st-pos-tr" style="--sticker-delay: 0.5s">★</span>
+            <div class="highlight-photo">
+              <img src="assets/11.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-2">
+            <span class="sticker sticker-emoji st-pos-tl" style="--sticker-delay: 0.4s">🎂</span>
+            <div class="highlight-photo">
+              <img src="assets/12.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-2">
+            <span class="sticker sticker-logo st-pos-br" style="--sticker-delay: 0.45s">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg" alt="" width="40" height="40" />
+            </span>
+            <div class="highlight-photo">
+              <img src="assets/16.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce">
+            <span class="sticker sticker-badge sticker-gold st-pos-tr" style="--sticker-delay: 0.35s">#1!</span>
+            <div class="highlight-photo">
+              <img src="assets/17.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-1">
+            <span class="sticker sticker-star st-pos-tr" style="--sticker-delay: 0.5s">★</span>
+            <div class="highlight-photo">
+              <img src="assets/18.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-2">
+            <span class="sticker sticker-logo st-pos-br" style="--sticker-delay: 0.45s">
+              <img src="https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg" alt="" width="40" height="40" />
+            </span>
+            <div class="highlight-photo">
+              <img src="assets/19.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce">
+            <span class="sticker sticker-badge sticker-navy st-pos-bl" style="--sticker-delay: 0.35s">GO MAV!</span>
+            <div class="highlight-photo">
+              <img src="assets/21.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+          <figure class="highlight-frame pop pop-bounce pop-delay-2">
+            <span class="sticker sticker-emoji st-pos-tl" style="--sticker-delay: 0.4s">🎂</span>
+            <div class="highlight-photo">
+              <img src="assets/22.jpeg" alt="Moment 1" loading="lazy" width="40" height="40"/>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="details" id="details">
+      <div class="container details-inner">
+        <div>
+          <p class="section-label pop">Game day</p>
+          <h2 class="pop pop-bounce pop-delay-1">Party at the Arena</h2>
+          <p class="details-intro pop pop-delay-2">
+            Lace up and head to our home court for cake, snacks, and a victory celebration.
+            Wear Mavs colors if you've got them — navy, royal blue, and silver.
+          </p>
+          <article class="ticket-card pop pop-flip pop-delay-3">
+            <h3>Game ticket</h3>
+            <div class="ticket-row">
+              <span>📅</span>
+              <div>
+                <div class="ticket-label">Date</div>
+                <div class="ticket-value">Saturday, September 5, 2026</div>
+              </div>
+            </div>
+            <div class="ticket-row">
+              <span>⏰</span>
+              <div>
+                <div class="ticket-label">Tip-off</div>
+                <div class="ticket-value">1PM – 3PM</div>
+              </div>
+            </div>
+            <div class="ticket-row">
+              <span>📍</span>
+              <div>
+                <div class="ticket-label">Venue</div>
+                <div class="ticket-value">
+                  Shakey's Pizza
+                  <small>Kisad rd, Baguio City</small>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="details-photos">
+          <figure class="details-hero-img pop pop-up pop-bounce">
+            <img
+              src="assets/shakeys.jpeg"
+              alt="Arena atmosphere"
+              loading="lazy"
+            />
+          </figure>
+          <div class="details-row-imgs">
+            <figure class="details-small pop pop-spin pop-delay-1">
+              <img src="assets/15.jpeg" alt="Basketball" loading="lazy" />
+            </figure>
+            <figure class="details-small alt pop pop-right pop-delay-2">
+              <img src="assets/party.jpeg" alt="Sneakers on court" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lineup" id="lineup">
+      <div class="lineup-court-bg" aria-hidden="true"></div>
+      <div class="lineup-court-lines" aria-hidden="true">
+        <svg viewBox="0 0 1000 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="1000" height="600" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="3"/>
+          <line x1="500" y1="0" x2="500" y2="600" stroke="rgba(255,255,255,0.4)" stroke-width="3"/>
+          <circle cx="500" cy="300" r="70" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="3"/>
+          <circle cx="500" cy="300" r="12" fill="rgba(74,159,216,0.5)"/>
+          <path d="M 120 80 A 200 200 0 0 1 120 520" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="3"/>
+          <path d="M 880 80 A 200 200 0 0 0 880 520" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="3"/>
+          <rect x="30" y="180" width="140" height="240" fill="none" stroke="rgba(74,159,216,0.4)" stroke-width="3" rx="4"/>
+          <rect x="830" y="180" width="140" height="240" fill="none" stroke="rgba(74,159,216,0.4)" stroke-width="3" rx="4"/>
+        </svg>
+      </div>
+
+      <div class="container">
+        <center><p class="section-label pop pop-up">Starting lineup</p></center>
+        <h2 class="pop pop-bounce pop-delay-1">Ninongs &amp; Ninangs</h2>
+        <p class="lineup-intro pop pop-delay-2">
+          Mav's godparents — his ultimate fan squad courtside for every play.
+        </p>
+
+        <div class="godparents-grid">
+          <div class="godparents-col ninangs">
+            <h3 class="col-heading pop pop-left">Ninangs</h3>
+            <div class="godparent-card pop pop-left pop-delay-1"><span class="godparent-num">1</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> PATRICIA</span></div></div>
+            <div class="godparent-card pop pop-left pop-delay-1"><span class="godparent-num">2</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> JAMAICA</span></div></div>
+            <div class="godparent-card pop pop-left pop-delay-2"><span class="godparent-num">3</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> HAZELLE</span></div></div>
+            <div class="godparent-card pop pop-left pop-delay-2"><span class="godparent-num">4</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> PEARL</span></div></div>
+            <div class="godparent-card pop pop-left pop-delay-3"><span class="godparent-num">5</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> HALLEL</span></div></div>
+            <div class="godparent-card pop pop-left pop-delay-3"><span class="godparent-num">6</span><div class="godparent-info"><span class="godparent-role">Ninang</span><span class="godparent-name"> JILLIAN</span></div></div>
+          </div>
+
+          <div class="court-center pop pop-bounce">
+            <img
+              class="court-center-logo"
+              src="assets/13.jpeg"
+              alt="Dallas Mavericks"
+              width="88"
+              height="88"
+            />
+            <span class="court-center-vs">7 · 7</span>
+            <span class="court-center-badge">HOME COURT</span>
+          </div>
+
+          <div class="godparents-col ninongs">
+            <h3 class="col-heading pop pop-right">Ninongs</h3>
+            <div class="godparent-card pop pop-right pop-delay-1"><span class="godparent-num">1</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> JB</span></div></div>
+            <div class="godparent-card pop pop-right pop-delay-1"><span class="godparent-num">2</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> PHILIP</span></div></div>
+            <div class="godparent-card pop pop-right pop-delay-2"><span class="godparent-num">3</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> CJ</span></div></div>
+            <div class="godparent-card pop pop-right pop-delay-2"><span class="godparent-num">4</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> ARNEL</span></div></div>
+            <div class="godparent-card pop pop-right pop-delay-3"><span class="godparent-num">5</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> MARC</span></div></div>
+            <div class="godparent-card pop pop-right pop-delay-3"><span class="godparent-num">6</span><div class="godparent-info"><span class="godparent-role">Ninong</span><span class="godparent-name"> ERIC</span></div></div>
+          </div>
+        </div>
+
+        <p class="lineup-note pop pop-up">
+          Thank you to Mav's ninongs and ninangs for being part of his team from day one.
+        </p>
+      </div>
+    </section>
+
+    <section class="rsvp-section" id="rsvp">
+      <div class="container">
+        <div class="rsvp-ball-wrap pop pop-bounce">
+          <img
+            src="assets/14.jpeg"
+            alt=""
+            width="100"
+            height="100"
+          />
+        </div>
+        <h2 class="pop pop-flip" style="font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; margin-bottom: 1rem;">
+          PARTY WITH US!
+        </h2>
+        <p class="pop pop-delay-1" style="color: var(--mavs-silver); margin-bottom: 2rem;">
+          We can't wait to celebrate with you on Mav's first birthday!
+        </p>
+
+        <form class="rsvp-form pop pop-delay-2" action="/rsvp" method="POST">
+          <input type="text"
+                name="guest_name"
+                placeholder="Your Name"
+                required>
+
+          <select name="attendance" required>
+              <option value="">Will you attend?</option>
+              <option value="Yes">Yes, we'll be there!</option>
+              <option value="No">Sorry, can't make it.</option>
+          </select>
+
+          <input type="number"
+                name="plus_count"
+                placeholder="Number of companions"
+                min="0"
+                value="0">
+
+          <button type="submit">
+              Submit RSVP
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer>Mavs-inspired fan invitation · Not affiliated with the NBA or Dallas Mavericks</footer>
+  </main>
+
+  <script>
+    (function () {
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var targets = document.querySelectorAll(".pop, .highlight-frame, .godparent-card");
+
+      if (reduced) {
+        targets.forEach(function (el) { el.classList.add("is-visible"); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var el = entry.target;
+            el.classList.add("is-visible");
+            observer.unobserve(el);
+          });
+        },
+        { root: null, rootMargin: "0px 0px -5% 0px", threshold: 0.08 }
+      );
+
+      targets.forEach(function (el) { observer.observe(el); });
+
+      document.querySelectorAll(".godparent-photo img").forEach(function (img) {
+        function markPhoto() {
+          if (img.naturalWidth > 0) img.parentElement.classList.add("has-photo");
+        }
+        img.addEventListener("load", markPhoto);
+        if (img.complete) markPhoto();
+      });
+
+      /* Subtle parallax on background orbs while scrolling */
+      var orbs = document.querySelectorAll(".orb");
+      var ticking = false;
+      window.addEventListener("scroll", function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = window.scrollY * 0.15;
+          orbs.forEach(function (orb, i) {
+            var factor = (i + 1) * 0.4;
+            orb.style.transform = "translateY(" + (-y * factor) + "px)";
+          });
+          ticking = false;
+        });
+      }, { passive: true });
+
+      /* Hero confetti burst */
+      var confettiRoot = document.getElementById("confetti");
+      if (confettiRoot && !reduced) {
+        var colors = ["#4a9fd8", "#b8c4ca", "#f5f7fa", "#00538c", "#00285e"];
+        var shapes = ["4px", "6px", "8px", "3px"];
+        for (var i = 0; i < 55; i++) {
+          var piece = document.createElement("span");
+          piece.className = "confetti-piece";
+          piece.style.left = Math.random() * 100 + "%";
+          piece.style.width = shapes[Math.floor(Math.random() * shapes.length)];
+          piece.style.height = shapes[Math.floor(Math.random() * shapes.length)];
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+          piece.style.setProperty("--drift", (Math.random() * 80 - 40) + "px");
+          piece.style.animationDuration = 4 + Math.random() * 5 + "s";
+          piece.style.animationDelay = Math.random() * 3 + "s";
+          confettiRoot.appendChild(piece);
+        }
+        setInterval(function () {
+          var p = document.createElement("span");
+          p.className = "confetti-piece";
+          p.style.left = Math.random() * 100 + "%";
+          p.style.width = "6px";
+          p.style.height = "6px";
+          p.style.background = colors[Math.floor(Math.random() * colors.length)];
+          p.style.borderRadius = "2px";
+          p.style.setProperty("--drift", (Math.random() * 60 - 30) + "px");
+          p.style.animationDuration = 5 + Math.random() * 3 + "s";
+          confettiRoot.appendChild(p);
+          setTimeout(function () { p.remove(); }, 9000);
+        }, 400);
+      }
+    })();
+  </script>
+</body>
+</html>
