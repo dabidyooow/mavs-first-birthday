@@ -85,63 +85,61 @@
     </body>
 
     <script>
-        async function loadRSVP() {
-        const res = await fetch(
-            "/.netlify/functions/get-rsvp"
-        );
+    async function loadRSVP() {
+    const res = await fetch(
+        "/.netlify/functions/get-rsvp"
+    );
 
-        const data = await res.json();
-        console.log(data);
+    const data = await res.json();
 
-        let attending = 0;
-        let declined = 0;
-        let heads = 0;
+    console.log(data);
 
-        const tbody =
-            document.querySelector("#table tbody");
+    let attending = 0;
+    let declined = 0;
+    let heads = 0;
 
-        tbody.innerHTML = "";
+    const tbody =
+        document.querySelector("#table tbody");
 
-        data.forEach(item => {
+    tbody.innerHTML = "";
 
-            const name =
-            item.data.guest_name || "";
+    data.forEach(item => {
 
-            const status =
-            item.data.attendance || "";
+        const name =
+        item.data?.guest_name || "";
 
-            const plus =
-            parseInt(item.data.plus_count || 0);
+        const status =
+        item.data?.attendance || "";
 
-            if (status === "Yes") {
-            attending++;
-            heads += plus + 1;
-            } else {
-            declined++;
-            }
+        const plus =
+        parseInt(item.data?.plus_count || 0);
 
-            tbody.innerHTML += `
-            <tr>
-                <td>${name}</td>
-                <td>${status}</td>
-                <td>${plus}</td>
-            </tr>
-            `;
-        });
-
-        document.getElementById(
-            "attending"
-        ).innerText = attending;
-
-        document.getElementById(
-            "declined"
-        ).innerText = declined;
-
-        document.getElementById(
-            "heads"
-        ).innerText = heads;
+        if (status === "Yes") {
+        attending++;
+        heads += plus + 1;
+        } else {
+        declined++;
         }
 
-        loadRSVP();
-        </script>
+        tbody.innerHTML += `
+        <tr>
+            <td>${name}</td>
+            <td>${status}</td>
+            <td>${plus}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("attending").innerText =
+        attending;
+
+    document.getElementById("declined").innerText =
+        declined;
+
+    document.getElementById("heads").innerText =
+        heads;
+    }
+
+    loadRSVP();
+    </script>
 </html>
