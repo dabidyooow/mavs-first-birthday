@@ -1,10 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Thank You!</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You | Mav's First Birthday</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --mavs-navy:#002B5E;
+      --mavs-blue:#0053BC;
+      --mavs-sky:#41B6E6;
+      --mavs-silver:#B8C4CA;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top, #0c4ea2, var(--mavs-navy));
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-family:'Poppins', sans-serif;
+      overflow:hidden;
+      padding:20px;
+    }
+
+    .card{
+      background:white;
+      width:100%;
+      max-width:650px;
+      border-radius:30px;
+      padding:50px 40px;
+      text-align:center;
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.35);
+      animation:pop .7s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .ball{
+      font-size:5rem;
+      animation:bounce 2s infinite;
+    }
+
+    h1{
+      font-family:'Bebas Neue', sans-serif;
+      font-size:4rem;
+      color:var(--mavs-navy);
+      margin-top:10px;
+      letter-spacing:2px;
+    }
+
+    h2{
+      color:var(--mavs-blue);
+      margin-bottom:20px;
+    }
+
+    p{
+      color:#555;
+      line-height:1.8;
+      font-size:1.1rem;
+      margin-bottom:15px;
+    }
+
+    .name{
+      color:var(--mavs-blue);
+      font-weight:700;
+    }
+
+    .btn{
+      display:inline-block;
+      margin-top:25px;
+      background:var(--mavs-blue);
+      color:white;
+      text-decoration:none;
+      padding:15px 35px;
+      border-radius:50px;
+      font-weight:600;
+      transition:.3s;
+    }
+
+    .btn:hover{
+      background:var(--mavs-sky);
+      transform:translateY(-3px);
+    }
+
+    .confetti{
+      position:absolute;
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      animation:fall 6s linear infinite;
+    }
+
+    @keyframes pop{
+      from{
+        opacity:0;
+        transform:scale(.8);
+      }
+      to{
+        opacity:1;
+        transform:scale(1);
+      }
+    }
+
+    @keyframes bounce{
+      0%,100%{
+        transform:translateY(0);
+      }
+      50%{
+        transform:translateY(-12px);
+      }
+    }
+
+    @keyframes fall{
+      from{
+        transform:translateY(-100vh);
+      }
+      to{
+        transform:translateY(100vh);
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Thank you for your RSVP! 🎉</h1>
-  <a href="/">Back to invitation</a>
+
+<div class="card">
+
+  <div class="ball">🏀</div>
+
+  <h1>THANK YOU!</h1>
+
+  <h2>Your RSVP has been received.</h2>
+
+  <p>
+    Mav and the Dacanay family can't wait to celebrate
+    this special day with you!
+  </p>
+
+  <p>
+    See you on the court for
+    <span class="name">Mav's First Birthday Party!</span>
+  </p>
+
+  <a href="/" class="btn">
+    Back to Invitation
+  </a>
+
+</div>
+
+<script>
+for(let i = 0; i < 40; i++){
+  const c = document.createElement('div');
+  c.className = 'confetti';
+
+  c.style.left = Math.random() * 100 + 'vw';
+  c.style.top = -20 + 'px';
+
+  const colors = [
+    '#0053BC',
+    '#41B6E6',
+    '#B8C4CA',
+    '#FFD700'
+  ];
+
+  c.style.background =
+    colors[Math.floor(Math.random() * colors.length)];
+
+  c.style.animationDuration =
+    (Math.random() * 3 + 3) + 's';
+
+  document.body.appendChild(c);
+}
+</script>
+
 </body>
 </html>
