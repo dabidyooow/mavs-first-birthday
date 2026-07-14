@@ -14,9 +14,10 @@ exports.handler = async function () {
 
     const forms = await response.json();
 
-    const rsvpForm = forms.find(
-      f => f.name === "rsvp"
-    );
+    return {
+        statusCode: 200,
+        body: JSON.stringify(forms)
+        };
 
     if (!rsvpForm) {
       return {
@@ -49,9 +50,4 @@ exports.handler = async function () {
       body: err.toString()
     };
   }
-};
-
-return {
-  statusCode: 200,
-  body: JSON.stringify(forms)
 };
