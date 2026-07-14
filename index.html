@@ -1741,7 +1741,7 @@
           We can't wait to celebrate with you on Mav's first birthday!
         </p>
 
-        <form class="rsvp-form pop pop-delay-2" action="/rsvp" method="POST">
+        <form class="rsvp-form pop pop-delay-2" method="POST" data-netlify="true">
           <input type="text"
                 name="guest_name"
                 placeholder="Your Name"
@@ -1752,13 +1752,13 @@
               <option value="Yes">Yes, we'll be there!</option>
               <option value="No">Sorry, can't make it.</option>
           </select>
-
+          <span>Number of Companions</span>
           <input type="number"
                 name="plus_count"
                 placeholder="Number of companions"
                 min="0"
                 value="0">
-
+          <input type="hidden" name="form-name" value="rsvp">
           <button type="submit">
               Submit RSVP
           </button>
